@@ -260,6 +260,76 @@
             font-size: 0.9rem;
         }
 
+        /* 图标选择器 */
+        .icon-picker-wrapper {
+            position: relative;
+        }
+        .icon-picker-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            min-height: 42px;
+        }
+        .icon-picker-toggle .icon-preview {
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+        .icon-picker-toggle .icon-placeholder {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        .icon-picker-grid {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            z-index: 1000;
+            padding: 10px;
+            max-height: 280px;
+            overflow-y: auto;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 4px;
+        }
+        .icon-picker-grid.show { display: grid; }
+        .icon-picker-grid input[type="text"] {
+            grid-column: 1 / -1;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            outline: none;
+        }
+        .icon-picker-grid input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+        .icon-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            padding: 5px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            border: 2px solid transparent;
+        }
+        .icon-option:hover { background: var(--hover-bg); }
+        .icon-option.selected { border-color: var(--primary); background: rgba(0,122,255,0.1); }
+        .icon-option.hidden { display: none; }
+
         .action-btn {
             padding: 5px 10px;
             border: none;
@@ -744,6 +814,17 @@
                     <input type="text" id="site-name" required>
                 </div>
                 <div class="form-group">
+                    <label>图标</label>
+                    <div class="icon-picker-wrapper">
+                        <input type="hidden" id="site-icon" value="🌐">
+                        <div class="icon-picker-toggle" id="site-icon-toggle" onclick="toggleIconPicker()">
+                            <span class="icon-preview" id="site-icon-preview">🌐</span>
+                            <span class="icon-placeholder">点击选择图标</span>
+                        </div>
+                        <div class="icon-picker-grid" id="site-icon-grid"></div>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label>网站地址</label>
                     <input type="url" id="site-url" required>
                 </div>
@@ -1022,6 +1103,8 @@
             document.getElementById('site-name').value = '';
             document.getElementById('site-url').value = '';
             document.getElementById('site-desc').value = '';
+            document.getElementById('site-icon').value = '🌐';
+            document.getElementById('site-icon-preview').textContent = '🌐';
             document.getElementById('site-tags').value = '';
             document.getElementById('siteModalTitle').textContent = id ? '编辑网站' : '添加网站';
             renderCategorySelect();
@@ -1035,6 +1118,9 @@
                     document.getElementById('site-desc').value = site.desc || '';
                     document.getElementById('site-category').value = site.category || '';
                     document.getElementById('site-tags').value = (site.tags || []).join(', ');
+                    const ic = site.icon || '🌐';
+                    document.getElementById('site-icon').value = ic;
+                    document.getElementById('site-icon-preview').textContent = ic;
                 }
             }
 
@@ -1042,6 +1128,86 @@
         }
 
         function editSite(id) { showSiteModal(id); }
+
+        // 图标选择器
+        const ICON_LIST = [
+            '🌐','🔍','📁','📂','⭐','🔥','✨','⚡','💡','🔗','👁️','🧭',
+            '📖','📚','📰','📝','🔖','📌','🏷️','📋','📊','📈','📉','📑',
+            '🎬','🎞️','🎥','🎵','🎧','🎤','🎹','🎨','🎭','🎪','🎯','🎲',
+            '🛠️','🔧','🔨','⚙️','🔩','🔑','🔒','🔓','💎','🏆','🎁','🎀',
+            '📱','💻','🖥️','⌨️','🖱️','💾','💿','📀','📼','📷','📸','📹',
+            '🌈','☀️','🌙','⭐','🌤️','⛅','🌧️','❄️','🔥','💧','🌊','🍀',
+            '🚀','✈️','🚗','🚕','🚌','🚎','🏎️','🚲','⛵','🚀','🛸','🌍',
+            '🏠','🏢','🏪','🏥','🏫','🏬','🏰','🏯','⛪','🕌','⛩️','🏗️',
+            '👤','👥','👶','👴','👨‍💻','👩‍💻','🧑‍🏫','👨‍⚕️','👩‍🔬','🧑‍🎨','👨‍🍳','👩‍🍳',
+            '🔬','🧬','💊','🩺','🩻','🧪','🧫','🧮','📡','🛰️','🛎️','⏰',
+            '⌚','⏱️','⏲️','🕐','📅','🗓️','🧰','🧲','🧲','🪑','🛋️','🛏️',
+            '🛒','🛍️','💰','💳','💵','💴','💶','💷','🪙','💸','📦','📫',
+            '📧','📨','📩','📬','📭','📮','📯','📜','📃','📄','📑','🗒️',
+            '✉️','📬','📮','📪','📫','📁','📂','🗂️','📅','🗃️','🗄️','🗑️',
+            '✂️','🖊️','🖋️','✒️','🖌️','🖍️','📏','📐','🧮','🧾','🧩','🧸',
+            '🤖','🤖','🧠','🫀','🫁','🦷','🦴','👀','👃','👅','👄','💋',
+            '❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕',
+            '🎉','🎊','🎈','🎎','🎏','🎐','🎑','🧧','🎀','🎁','🏮','🎐',
+            '🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮',
+            '🌸','🌺','🌻','🌹','🌷','🌵','🌴','🌲','🌳','🍀','🍁','🍂',
+            '🍎','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍒','🍑','🍍','🥭',
+            '🥐','🍞','🥖','🧀','🍳','🥚','🥓','🍔','🍟','🍕','🌮','🌯',
+            '🍺','🍻','🥂','🍷','🥃','☕','🧃','🥤','🧋','🧃','🧉','🍵',
+            '🔴','🟠','🟡','🟢','🔵','🟣','⚫','⚪','🟤','🔶','🔷','🔸',
+            '🔹','🔺','🔻','💠','🔘','🔳','🔲','▪️','▫️','◾','◽','◼️',
+            '🏆','🥇','🥈','🥉','🎖️','🏅','🎗️','🎫','🎟️','🎪','🎭','🎨',
+            '💻','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿','📷','📹','📺',
+            '☁️','⛅','⛈️','🌤️','🌣','🌥','🌦','🌧','⛈','🌩','🌨','❄️',
+            '🍀','☘️','🌿','🌱','🌴','🌾','🌵','🪨','🏔️','⛰️','🗻','🌋',
+            '🏝️','🏜️','🌅','🌄','🌃','🌉','🌌','🎇','🎆','🧨','✨','💫',
+            '🎋','🎍','🧧','🧨','🧧','✴️','8⃣','🔱','⚛️','🧬','🔮','🧿',
+            '🛡️','⚔️','🗡️','💣','🔫','🏹','🛡️','🔑','🗝️','🔒','🔓','🔐',
+            '📌','📍','🗺','🗾','🧭','🧱','🪜','🪝','🪢','🧶','🧵','🪡',
+        ];
+
+        function toggleIconPicker() {
+            const grid = document.getElementById('site-icon-grid');
+            if (grid.classList.contains('show')) {
+                grid.classList.remove('show');
+                return;
+            }
+            // 渲染图标网格
+            const searchInput = '<input type="text" id="icon-search" placeholder="搜索图标..." oninput="filterIcons(this.value)">';
+            grid.innerHTML = searchInput + ICON_LIST.map(ic =>
+                `<div class="icon-option${ic === document.getElementById('site-icon').value ? ' selected' : ''}" data-icon="${ic}" onclick="selectIcon('${ic}')">${ic}</div>`
+            ).join('');
+            grid.classList.add('show');
+            // 聚焦搜索框
+            setTimeout(() => document.getElementById('icon-search')?.focus(), 50);
+        }
+
+        function selectIcon(icon) {
+            document.getElementById('site-icon').value = icon;
+            document.getElementById('site-icon-preview').textContent = icon;
+            // 更新选中状态
+            document.querySelectorAll('.icon-option').forEach(el => {
+                el.classList.toggle('selected', el.dataset.icon === icon);
+            });
+            document.getElementById('site-icon-grid').classList.remove('show');
+        }
+
+        function filterIcons(query) {
+            const q = query.toLowerCase();
+            document.querySelectorAll('.icon-option').forEach(el => {
+                el.classList.toggle('hidden', q && !el.dataset.icon.includes(q));
+            });
+        }
+
+        // 点击外部关闭图标选择器
+        document.addEventListener('click', function(e) {
+            const grid = document.getElementById('site-icon-grid');
+            const toggle = document.getElementById('site-icon-toggle');
+            if (!grid || !grid.classList.contains('show')) return;
+            if (!grid.contains(e.target) && !toggle.contains(e.target)) {
+                grid.classList.remove('show');
+            }
+        });
 
         function handleSiteSubmit(e) {
             e.preventDefault();
@@ -1052,7 +1218,7 @@
                 desc: document.getElementById('site-desc').value,
                 category: document.getElementById('site-category').value,
                 tags: document.getElementById('site-tags').value.split(',').map(t => t.trim()).filter(t => t),
-                icon: '🌐'
+                icon: document.getElementById('site-icon').value || '🌐'
             };
 
             if (id) {
