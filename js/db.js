@@ -3,6 +3,7 @@
  */
 
 // 数据键名
+const DB_VERSION = 2;
 const DB_KEYS = {
     USERS: 'nav_users',
     SITES: 'nav_sites',
@@ -736,6 +737,12 @@ const DEFAULT_NEWS = [
 
 // 初始化数据库
 function initDB() {
+    // 版本检测，数据结构变更时强制重置
+    if (localStorage.getItem('nav_db_version') !== String(DB_VERSION)) {
+        Object.values(DB_KEYS).forEach(key => localStorage.removeItem(key));
+        localStorage.setItem('nav_db_version', String(DB_VERSION));
+    }
+
     if (!localStorage.getItem(DB_KEYS.USERS)) {
         const users = [{
             id: 1,
