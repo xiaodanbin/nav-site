@@ -231,6 +231,7 @@
         .search-wrapper {
             max-width: 680px;
             margin: 0 auto 18px;
+            position: relative;
         }
 
         .search-form {
@@ -309,6 +310,40 @@
         .search-row button:hover {
             background: var(--primary-dark);
         }
+
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            z-index: 999;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .search-dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            gap: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .search-dropdown-item:last-child { border-bottom: none; }
+        .search-dropdown-item:hover { background: var(--hover-bg); }
+        .search-dropdown-item .sdi-icon { font-size: 1.2rem; }
+        .search-dropdown-item .sdi-info { flex: 1; min-width: 0; }
+        .search-dropdown-item .sdi-name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .search-dropdown-item .sdi-desc { font-size: 0.78rem; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .search-dropdown-item .sdi-cat { font-size: 0.72rem; color: var(--text-light); background: var(--tag-bg); padding: 2px 6px; border-radius: 4px; white-space: nowrap; }
+        .search-dropdown-tip { padding: 8px 16px; color: var(--text-light); font-size: 0.8rem; text-align: center; }
 
         .search-engine-bar {
             display: flex;
@@ -912,9 +947,10 @@
                         <span class="search-type-pill" data-group="job">求职</span>
                     </div>
                     <div class="search-row">
-                        <input type="text" id="searchInput" placeholder="输入关键字搜索..." onkeypress="handleSearch(event)" autocomplete="off" autofocus>
+                        <input type="text" id="searchInput" placeholder="输入关键字搜索..." oninput="handleSearchInput(this.value)" onkeypress="handleSearch(event)" autocomplete="off" autofocus>
                         <button type="button" onclick="doSearch()">🔍</button>
                     </div>
+                    <div id="searchDropdown" class="search-dropdown" style="display:none;"></div>
                     <div class="search-engine-bar" id="search-engine-bar">
                         <!-- 动态生成 -->
                     </div>
@@ -1172,6 +1208,16 @@
             initTheme();
             fetchPoetry();
             initSearchEngine();
+
+            // 点击搜索框外部关闭下拉
+            document.addEventListener('click', function(e) {
+                const dropdown = document.getElementById('searchDropdown');
+                const input = document.getElementById('searchInput');
+                if (!dropdown || dropdown.style.display === 'none') return;
+                if (!dropdown.contains(e.target) && e.target !== input) {
+                    dropdown.style.display = 'none';
+                }
+            });
             renderSidebar();
             renderUserInfo();
             renderAdminUI();
@@ -1231,6 +1277,47 @@
             saveState();
         }
 
+        function handleSearchInput(value) {
+            const kw = value.trim();
+            const dropdown = document.getElementById('searchDropdown');
+            if (!kw) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            const group = searchGroups[currentSearchGroup];
+            const engine = group && group.engines.find(e => e.id === currentSearchEngine);
+            // 非站内搜索时隐藏下拉
+            if (engine && engine.url) {
+                dropdown.style.display = 'none';
+                return;
+            }
+            const allSites = DB.Site.getAll();
+            const catMap = {};
+            DB.Category.getAll().forEach(c => catMap[c.id] = c.name);
+            const kwl = kw.toLowerCase();
+            const matches = allSites.filter(site =>
+                (site.name && site.name.toLowerCase().includes(kwl)) ||
+                (site.desc && site.desc.toLowerCase().includes(kwl)) ||
+                (site.tags && site.tags.some(t => t.toLowerCase().includes(kwl)))
+            ).slice(0, 30);
+            if (matches.length === 0) {
+                dropdown.innerHTML = '<div class="search-dropdown-tip">未找到匹配网站</div>';
+            } else {
+                dropdown.innerHTML = matches.map(site => {
+                    const catName = catMap[site.category] || '';
+                    return `<a class="search-dropdown-item" href="${site.url}" target="_blank" onclick="window.open('${site.url}','_blank');return false;">
+                        <span class="sdi-icon">${site.icon || '🔗'}</span>
+                        <span class="sdi-info">
+                            <div class="sdi-name">${site.name}</div>
+                            <div class="sdi-desc">${site.desc || ''}</div>
+                        </span>
+                        ${catName ? `<span class="sdi-cat">${catName}</span>` : ''}
+                    </a>`;
+                }).join('');
+            }
+            dropdown.style.display = 'block';
+        }
+
         function handleSearch(e) {
             if (e.key === 'Enter') doSearch();
         }
@@ -1239,31 +1326,16 @@
             const keyword = document.getElementById('searchInput').value.trim();
             if (!keyword) return;
             const group = searchGroups[currentSearchGroup];
-            const engine = group.engines.find(e => e.id === currentSearchEngine);
+            const engine = group && group.engines.find(e => e.id === currentSearchEngine);
             if (!engine || !engine.url) {
-                filterLocalSites(keyword);
+                // 站内搜索：已有下拉结果，隐藏下拉即可
+                document.getElementById('searchDropdown').style.display = 'none';
                 return;
             }
             window.open(engine.url + encodeURIComponent(keyword), '_blank');
         }
 
-        function filterLocalSites(keyword) {
-            const allCards = document.querySelectorAll('.url-card');
-            const kw = keyword.toLowerCase();
-            let found = 0;
-            allCards.forEach(card => {
-                const name = card.querySelector('.url-name')?.textContent.toLowerCase() || '';
-                const desc = card.querySelector('.url-desc')?.textContent.toLowerCase() || '';
-                const match = name.includes(kw) || desc.includes(kw);
-                card.style.display = match ? '' : 'none';
-                if (match) found++;
-            });
-            if (found === 0) {
-                showToast('未找到匹配网站', 'error');
-            } else {
-                showToast('找到 ' + found + ' 个相关网站', 'success');
-            }
-        }
+        function filterLocalSites(keyword) { } // 保留兼容
 
         // 主题
         function initTheme() {
