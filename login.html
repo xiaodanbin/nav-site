@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="io-grey-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 导航站</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📂</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1296db;
+            --bg: #f5f5f5;
+            --card-bg: #fff;
+            --text: #333;
+            --text-secondary: #666;
+            --border: #e5e5e5;
+        }
+        .io-black-mode {
+            --bg: #1a1a1a;
+            --card-bg: #252525;
+            --text: #e0e0e0;
+            --text-secondary: #999;
+            --border: #3a3a3a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary), #5bc0de);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .login-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .login-body {
+            padding: 40px 30px;
+        }
+
+        .tab-nav {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), #5bc0de);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(18, 150, 219, 0.4);
+        }
+
+        .login-footer {
+            text-align: center;
+            padding: 20px 30px;
+            border-top: 1px solid var(--border);
+        }
+
+        .login-footer a {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .back-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            border-radius: 25px;
+            color: var(--text);
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .back-home:hover {
+            color: var(--primary);
+        }
+
+        .theme-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            color: var(--text);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 已登录状态 */
+        .user-info-logged {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .user-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #5bc0de);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .user-name-large {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .user-role {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .logout-btn {
+            margin-top: 30px;
+            padding: 12px 40px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ff5252;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 15px 30px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid #52c41a;
+        }
+
+        .toast.error {
+            border-left: 4px solid #ff4d4f;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-home">← 返回首页</a>
+    <button class="theme-btn" onclick="toggleTheme()">
+        <span id="theme-icon">🌙</span> 主题
+    </button>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>📂 导航站</h1>
+                <p>登录后享受更多功能</p>
+            </div>
+
+            <div class="login-body" id="login-body">
+                <!-- 动态内容 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="js/db.js"></script>
+    <script>
+        function init() {
+            initTheme();
+            renderContent();
+        }
+
+        function initTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') {
+                document.documentElement.classList.remove('io-grey-mode');
+                document.documentElement.classList.add('io-black-mode');
+                document.getElementById('theme-icon').textContent = '☀️';
+            } else if (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.remove('io-grey-mode');
+                document.documentElement.classList.add('io-black-mode');
+                document.getElementById('theme-icon').textContent = '☀️';
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-icon');
+
+            if (html.classList.contains('io-grey-mode')) {
+                html.classList.remove('io-grey-mode');
+                html.classList.add('io-black-mode');
+                btn.textContent = '☀️';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.classList.remove('io-black-mode');
+                html.classList.add('io-grey-mode');
+                btn.textContent = '🌙';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        function renderContent() {
+            const body = document.getElementById('login-body');
+            const user = DB.User.getCurrentUser();
+
+            if (user) {
+                body.innerHTML = `
+                    <div class="user-info-logged">
+                        <div class="user-avatar-large">${user.username.charAt(0).toUpperCase()}</div>
+                        <div class="user-name-large">${user.username}</div>
+                        <span class="user-role">${user.role === 'admin' ? '管理员' : '普通用户'}</span>
+                        <div style="margin-top: 15px; color: var(--text-secondary); font-size: 0.9rem;">
+                            注册时间: ${new Date(user.created_at).toLocaleDateString()}
+                        </div>
+                        <div style="margin-top: 10px; color: var(--text-secondary); font-size: 0.9rem;">
+                            邮箱: ${user.email || '未设置'}
+                        </div>
+                        <button class="logout-btn" onclick="logout()">退出登录</button>
+                    </div>
+                `;
+            } else {
+                body.innerHTML = `
+                    <div class="tab-nav">
+                        <button class="tab-btn active" onclick="switchTab('login')">登录</button>
+                        <button class="tab-btn" onclick="switchTab('register')">注册</button>
+                    </div>
+
+                    <div class="tab-content active" id="tab-login">
+                        <form onsubmit="handleLogin(event)">
+                            <div class="form-group">
+                                <label>用户名</label>
+                                <input type="text" name="username" required placeholder="请输入用户名">
+                            </div>
+                            <div class="form-group">
+                                <label>密码</label>
+                                <input type="password" name="password" required placeholder="请输入密码">
+                            </div>
+                            <button type="submit" class="btn-login">登录</button>
+                        </form>
+                    </div>
+
+                    <div class="tab-content" id="tab-register">
+                        <form onsubmit="handleRegister(event)">
+                            <div class="form-group">
+                                <label>用户名</label>
+                                <input type="text" name="username" required placeholder="请输入用户名" minlength="3">
+                            </div>
+                            <div class="form-group">
+                                <label>邮箱</label>
+                                <input type="email" name="email" required placeholder="请输入邮箱">
+                            </div>
+                            <div class="form-group">
+                                <label>密码</label>
+                                <input type="password" name="password" required placeholder="请输入密码" minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label>确认密码</label>
+                                <input type="password" name="confirmPassword" required placeholder="请再次输入密码">
+                            </div>
+                            <button type="submit" class="btn-login">注册</button>
+                        </form>
+                    </div>
+                `;
+
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('tab') === 'register') {
+                    switchTab('register');
+                }
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelector(`.tab-btn[onclick*="${tab}"]`).classList.add('active');
+            document.getElementById('tab-' + tab).classList.add('active');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const form = e.target;
+            const result = DB.User.login(form.username.value.trim(), form.password.value);
+
+            if (result.success) {
+                showToast('登录成功！正在跳转...', 'success');
+                setTimeout(() => {
+                    const redirect = new URLSearchParams(window.location.search).get('redirect');
+                    location.href = redirect || 'index';
+                }, 1000);
+            } else {
+                showToast(result.message, 'error');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const form = e.target;
+            const password = form.password.value;
+            const confirmPassword = form.confirmPassword.value;
+
+            if (password !== confirmPassword) {
+                showToast('两次输入的密码不一致', 'error');
+                return;
+            }
+
+            const result = DB.User.register(
+                form.username.value.trim(),
+                password,
+                form.email.value.trim()
+            );
+
+            if (result.success) {
+                showToast('注册成功！正在跳转...', 'success');
+                setTimeout(() => location.href = 'index', 1000);
+            } else {
+                showToast(result.message, 'error');
+            }
+        }
+
+        function logout() {
+            DB.User.logout();
+            showToast('已退出登录', 'success');
+            setTimeout(() => location.reload(), 1000);
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        init();
+    </script>
+</body>
+</html>

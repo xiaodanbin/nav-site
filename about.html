@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="io-grey-mode">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于本站 - 导航站</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📂</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #1296db;
+            --bg: #f5f5f5;
+            --card-bg: #fff;
+            --text: #333;
+            --text-secondary: #666;
+            --border: #e5e5e5;
+        }
+        .io-black-mode {
+            --bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text: #e0e0e0;
+            --text-secondary: #999;
+            --border: #3a3a3a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .logo-large {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), #5bc0de);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 25px;
+            box-shadow: 0 10px 40px rgba(18, 150, 219, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary), #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            padding: 20px;
+            background: var(--bg);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), #5bc0de);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 15px;
+        }
+
+        .feature-item h3 {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .feature-item p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(18, 150, 219, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .account-box {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .account-box div {
+            margin: 8px 0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .version-info {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .card { padding: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-large">📂</div>
+            <h1>导航站</h1>
+            <p>收集整理各类实用网站资源，让网络生活更便捷</p>
+        </div>
+
+        <div class="card">
+            <h2>✨ 功能特点</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🔍</div>
+                    <h3>多搜索引擎</h3>
+                    <p>支持百度、Google、Bing等多个搜索引擎</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📁</div>
+                    <h3>分类管理</h3>
+                    <p>清晰的网站分类，快速找到你需要的内容</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🌙</div>
+                    <h3>明暗主题</h3>
+                    <p>支持明暗模式切换，保护眼睛</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <h3>响应式设计</h3>
+                    <p>完美适配桌面端和移动端</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">❤️</div>
+                    <h3>收藏功能</h3>
+                    <p>登录后可收藏常用网站</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>后台管理</h3>
+                    <p>管理员可添加、编辑、删除网站</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🔐 账户说明</h2>
+            <p><strong>默认管理员账户：</strong></p>
+            <div class="account-box">
+                <div><strong>用户名：</strong>admin</div>
+                <div><strong>密码：</strong>admin123</div>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                ⚠️ 首次使用请登录后台修改默认密码！
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>📋 使用指南</h2>
+            <ol style="padding-left: 20px; color: var(--text-secondary);">
+                <li style="margin-bottom: 10px;">点击「登录/注册」进入账户页面</li>
+                <li style="margin-bottom: 10px;">使用管理员账户登录后可访问后台</li>
+                <li style="margin-bottom: 10px;">在后台可以管理网站、分类、公告</li>
+                <li style="margin-bottom: 10px;">普通用户登录后可以收藏常用网站</li>
+                <li style="margin-bottom: 10px;">点击右上角图标切换明暗主题</li>
+            </ol>
+        </div>
+
+        <div class="btn-group">
+            <a href="index.html" class="btn">← 返回首页</a>
+            <a href="admin.html" class="btn btn-secondary">⚙️ 管理后台</a>
+        </div>
+
+        <div class="version-info">
+            <p>版本 1.0.0 | 2024</p>
+        </div>
+    </div>
+
+    <script>
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.remove('io-grey-mode');
+            document.documentElement.classList.add('io-black-mode');
+        }
+    </script>
+</body>
+</html>
