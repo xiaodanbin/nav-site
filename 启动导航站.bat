@@ -17,7 +17,7 @@ cscript //nologo "%TEMP%\nav_server.vbs"
 timeout /t 3 /nobreak >nul
 
 :: 打开浏览器
-start http://localhost:3000/
+start http://localhost:3000/admin.html
 
 :: 清理临时文件
 del "%TEMP%\nav_server.vbs" 2>nul
