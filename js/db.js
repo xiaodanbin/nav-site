@@ -3,7 +3,7 @@
  */
 
 // 数据键名
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 const DB_KEYS = {
     USERS: 'nav_users',
     SITES: 'nav_sites',
@@ -25,6 +25,35 @@ const DEFAULT_SETTINGS = {
 
 // 完整分类列表
 const DEFAULT_CATEGORIES = [
+    // ========== 常用推荐（所有webstack网站）==========
+    { id: 'term-5000', name: '常用推荐', icon: '⭐', parent: null },
+    { id: 'term-5000-704', name: '常用网址', icon: '⭐', parent: 'term-5000' },
+    { id: 'term-5000-705', name: '公司相关', icon: '🏢', parent: 'term-5000' },
+    { id: 'term-5000-706', name: '项目相关', icon: '📋', parent: 'term-5000' },
+    { id: 'term-5000-707', name: '生物信息', icon: '🧬', parent: 'term-5000' },
+    { id: 'term-5000-708', name: '云服务器', icon: '☁️', parent: 'term-5000' },
+    { id: 'term-5000-709', name: '办公学习', icon: '📖', parent: 'term-5000' },
+    { id: 'term-5000-710', name: '文字工具', icon: '✍️', parent: 'term-5000' },
+    { id: 'term-5000-711', name: '影音娱乐', icon: '🎬', parent: 'term-5000' },
+    { id: 'term-5000-712', name: 'AI工具', icon: '🤖', parent: 'term-5000' },
+    { id: 'term-5000-713', name: '在线工具', icon: '🛠️', parent: 'term-5000' },
+    { id: 'term-5000-714', name: '教程资料', icon: '📚', parent: 'term-5000' },
+    { id: 'term-5000-715', name: '游戏竞技', icon: '🎮', parent: 'term-5000' },
+    { id: 'term-5000-716', name: '网盘资源', icon: '💾', parent: 'term-5000' },
+    { id: 'term-5000-717', name: '图标素材', icon: '🔣', parent: 'term-5000' },
+    { id: 'term-5000-718', name: '图标设计', icon: '🎨', parent: 'term-5000' },
+    { id: 'term-5000-719', name: '平面素材', icon: '🖼️', parent: 'term-5000' },
+    { id: 'term-5000-720', name: '字体资源', icon: '🔤', parent: 'term-5000' },
+    { id: 'term-5000-721', name: '图形创意', icon: '🎨', parent: 'term-5000' },
+    { id: 'term-5000-722', name: '界面设计', icon: '🖥️', parent: 'term-5000' },
+    { id: 'term-5000-723', name: '在线配色', icon: '🌈', parent: 'term-5000' },
+    { id: 'term-5000-724', name: '谷歌插件', icon: '🌐', parent: 'term-5000' },
+    { id: 'term-5000-725', name: '资讯书籍', icon: '📰', parent: 'term-5000' },
+    { id: 'term-5000-726', name: '博客论坛', icon: '💬', parent: 'term-5000' },
+    { id: 'term-5000-727', name: '设计规范', icon: '📐', parent: 'term-5000' },
+    { id: 'term-5000-728', name: '视频教程', icon: '▶️', parent: 'term-5000' },
+    { id: 'term-5000-729', name: '临时收藏', icon: '📎', parent: 'term-5000' },
+
     // 常用站点
     { id: 'term-30', name: '常用站点', icon: '⭐', parent: null },
     { id: 'term-30-32', name: '阅读', icon: '📖', parent: 'term-30' },
@@ -91,35 +120,6 @@ const DEFAULT_CATEGORIES = [
 
     // 热门推荐
     { id: 'term-hot', name: '热门推荐', icon: '🔥', parent: null },
-
-        // ========== 常用推荐（所有webstack网站）==========
-    { id: 'term-5000', name: '常用推荐', icon: '⭐', parent: null },
-    { id: 'term-5000-704', name: '常用网址', icon: '⭐', parent: 'term-5000' },
-    { id: 'term-5000-705', name: '公司相关', icon: '🏢', parent: 'term-5000' },
-    { id: 'term-5000-706', name: '项目相关', icon: '📋', parent: 'term-5000' },
-    { id: 'term-5000-707', name: '生物信息', icon: '🧬', parent: 'term-5000' },
-    { id: 'term-5000-708', name: '云服务器', icon: '☁️', parent: 'term-5000' },
-    { id: 'term-5000-709', name: '办公学习', icon: '📖', parent: 'term-5000' },
-    { id: 'term-5000-710', name: '文字工具', icon: '✍️', parent: 'term-5000' },
-    { id: 'term-5000-711', name: '影音娱乐', icon: '🎬', parent: 'term-5000' },
-    { id: 'term-5000-712', name: 'AI工具', icon: '🤖', parent: 'term-5000' },
-    { id: 'term-5000-713', name: '在线工具', icon: '🛠️', parent: 'term-5000' },
-    { id: 'term-5000-714', name: '教程资料', icon: '📚', parent: 'term-5000' },
-    { id: 'term-5000-715', name: '游戏竞技', icon: '🎮', parent: 'term-5000' },
-    { id: 'term-5000-716', name: '网盘资源', icon: '💾', parent: 'term-5000' },
-    { id: 'term-5000-717', name: '图标素材', icon: '🔣', parent: 'term-5000' },
-    { id: 'term-5000-718', name: '图标设计', icon: '🎨', parent: 'term-5000' },
-    { id: 'term-5000-719', name: '平面素材', icon: '🖼️', parent: 'term-5000' },
-    { id: 'term-5000-720', name: '字体资源', icon: '🔤', parent: 'term-5000' },
-    { id: 'term-5000-721', name: '图形创意', icon: '🎨', parent: 'term-5000' },
-    { id: 'term-5000-722', name: '界面设计', icon: '🖥️', parent: 'term-5000' },
-    { id: 'term-5000-723', name: '在线配色', icon: '🌈', parent: 'term-5000' },
-    { id: 'term-5000-724', name: '谷歌插件', icon: '🌐', parent: 'term-5000' },
-    { id: 'term-5000-725', name: '资讯书籍', icon: '📰', parent: 'term-5000' },
-    { id: 'term-5000-726', name: '博客论坛', icon: '💬', parent: 'term-5000' },
-    { id: 'term-5000-727', name: '设计规范', icon: '📐', parent: 'term-5000' },
-    { id: 'term-5000-728', name: '视频教程', icon: '▶️', parent: 'term-5000' },
-    { id: 'term-5000-729', name: '临时收藏', icon: '📎', parent: 'term-5000' },
 ];
 
 // 完整网站数据
